@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.DS_Store
+# Fuentes internas (costos, fotos originales)
+*.xlsx
+*.zip

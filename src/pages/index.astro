@@ -1,0 +1,225 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { site } from '../config';
+import { getProductos, gs } from '../lib/stock';
+import '../styles/global.css';
+
+const productos = getProductos();
+const categorias = [...new Set(productos.map((p) => p.categoria))];
+const disponibles = productos.filter((p) => p.stock > 0).length;
+const logo = ['logo.svg', 'logo.png', 'logo.webp'].find((f) =>
+  fs.existsSync(path.join(process.cwd(), 'public', f)),
+);
+const dto = (p: { precio: number; precioAnterior: number }) =>
+  p.precioAnterior > p.precio ? Math.round((1 - p.precio / p.precioAnterior) * 100) : 0;
+const data = JSON.stringify(
+  productos.map((p) => ({ ...p, precioTxt: gs(p.precio), anteriorTxt: gs(p.precioAnterior), dto: dto(p) })),
+).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex" />
+    <title>{site.titulo} · {site.marca}</title>
+    <meta name="description" content={site.subtitulo} />
+    <link rel="icon" href={logo ? `/${logo}` : 'data:,'} />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-in">
+        <a href="#top" class="brand" aria-label={site.marca}>
+          {logo ? <img src={`/${logo}`} alt={site.marca} /> : <span>{site.marca}</span>}
+        </a>
+        <nav>
+          <a href="#catalogo">Catálogo</a>
+          <a href="#pagos">Medios de pago</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero wrap">
+        <p class="eyebrow">Exclusivo colaboradores</p>
+        <h1>{site.titulo} {site.marca}.</h1>
+        <p class="lead">{site.subtitulo}</p>
+        <a class="btn" href="#catalogo">Ver {disponibles} productos disponibles</a>
+      </section>
+
+      <section id="catalogo" class="wrap">
+        <div class="toolbar">
+          <div class="chips" role="tablist" aria-label="Categorías">
+            <button class="chip on" data-cat="">Todos</button>
+            {categorias.map((c) => <button class="chip" data-cat={c}>{c}</button>)}
+          </div>
+          <div class="tools">
+            <input id="q" type="search" placeholder="Buscar" aria-label="Buscar producto" />
+            <select id="orden" aria-label="Ordenar">
+              <option value="">Destacados</option>
+              <option value="asc">Menor precio</option>
+              <option value="desc">Mayor precio</option>
+              <option value="dto">Mayor descuento</option>
+            </select>
+          </div>
+        </div>
+
+        <ul class="grid" id="grid">
+          {
+            productos.map((p, i) => (
+              <li
+                class:list={['card', { out: p.stock === 0 }]}
+                data-i={i}
+                data-cat={p.categoria}
+                data-precio={p.precio}
+                data-dto={dto(p)}
+                data-q={`${p.nombre} ${p.categoria} ${p.sku}`.toLowerCase()}
+              >
+                <button class="card-btn" aria-label={`Ver ${p.nombre}`}>
+                  <div class="ph">
+                    {p.foto ? (
+                      <img src={p.foto} alt={p.nombre} loading="lazy" />
+                    ) : (
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 7l9-4 9 4v10l-9 4-9-4V7zm0 0l9 4m0 0l9-4m-9 4v10" />
+                      </svg>
+                    )}
+                    {dto(p) > 0 && <span class="tag">-{dto(p)}%</span>}
+                  </div>
+                  <div class="info">
+                    <span class="cat">{p.categoria}</span>
+                    <h3>{p.nombre}</h3>
+                    <div class="price">
+                      <strong>{gs(p.precio)}</strong>
+                      {dto(p) > 0 && <s>{gs(p.precioAnterior)}</s>}
+                    </div>
+                    <span class:list={['stock', { low: p.stock > 0 && p.stock <= 3 }]}>
+                      {p.stock === 0 ? 'Agotado' : p.stock === 1 ? 'Queda 1' : `Quedan ${p.stock}`}
+                    </span>
+                  </div>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="empty" id="empty" hidden>No encontramos productos con ese filtro.</p>
+      </section>
+
+      <section id="pagos" class="pagos">
+        <div class="wrap">
+          <h2>Medios de pago.</h2>
+          <div class="pay-grid">
+            <article>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8m4-8v8m6-8v8m4-8v8M3 20h18" /></svg>
+              <h3>Transferencia</h3>
+              <p>Transferencia bancaria directa.</p>
+            </article>
+            <article>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7zm0 3h18M7 15h4" /></svg>
+              <h3>Bancard</h3>
+              <p>Tarjeta de crédito, tarjeta de débito y QR.</p>
+            </article>
+            <article>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18m4.5-14H10a3 3 0 000 6h4a3 3 0 010 6H7" /></svg>
+              <h3>Financiación</h3>
+              <p>Vía FIADO, con descuento directo de salario. Sujeto a aprobación.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>{site.comoComprar}</p>
+      <p>Precios en guaraníes, IVA incluido. Stock sujeto a disponibilidad al momento de la compra.</p>
+    </footer>
+
+    <dialog id="modal" aria-labelledby="m-nombre">
+      <button class="close" aria-label="Cerrar" data-close>&times;</button>
+      <div class="m-body">
+        <div class="ph" id="m-ph"></div>
+        <div class="m-info">
+          <span class="cat" id="m-cat"></span>
+          <h2 id="m-nombre"></h2>
+          <p id="m-desc"></p>
+          <div class="price"><strong id="m-precio"></strong><s id="m-anterior"></s></div>
+          <span class="stock" id="m-stock"></span>
+          <p class="sku">Código <span id="m-sku"></span></p>
+          <a class="btn" id="m-cta" target="_blank" rel="noopener" hidden>Lo quiero</a>
+          <p class="how" id="m-how">{site.comoComprar}</p>
+          <ul class="m-pay">
+            <li>Transferencia</li>
+            <li>Bancard (TC, TD, QR)</li>
+            <li>Financiación vía FIADO*</li>
+          </ul>
+          <small>*Sujeto a aprobación, con descuento directo de salario.</small>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="application/json" id="data" set:html={data} />
+    <script define:vars={{ whatsapp: site.whatsapp }} is:inline>
+      const $ = (s) => document.querySelector(s);
+      const productos = JSON.parse($('#data').textContent);
+      const grid = $('#grid');
+      const cards = [...grid.children];
+      let cat = '';
+
+      function render() {
+        const q = $('#q').value.trim().toLowerCase();
+        const orden = $('#orden').value;
+        let n = 0;
+        for (const c of cards) {
+          const ok = (!cat || c.dataset.cat === cat) && (!q || c.dataset.q.includes(q));
+          c.hidden = !ok;
+          if (ok) n++;
+        }
+        const key = { asc: (c) => +c.dataset.precio, desc: (c) => -c.dataset.precio, dto: (c) => -c.dataset.dto }[orden] ?? ((c) => +c.dataset.i);
+        // Agotados siempre al final
+        [...cards]
+          .sort((a, b) => a.classList.contains('out') - b.classList.contains('out') || key(a) - key(b))
+          .forEach((c) => grid.appendChild(c));
+        $('#empty').hidden = n > 0;
+      }
+
+      document.querySelectorAll('.chip').forEach((b) =>
+        b.addEventListener('click', () => {
+          cat = b.dataset.cat;
+          document.querySelectorAll('.chip').forEach((x) => x.classList.toggle('on', x === b));
+          render();
+        }),
+      );
+      $('#q').addEventListener('input', render);
+      $('#orden').addEventListener('change', render);
+      render();
+
+      const modal = $('#modal');
+      grid.addEventListener('click', (e) => {
+        const card = e.target.closest('.card');
+        if (!card) return;
+        const p = productos[card.dataset.i];
+        $('#m-ph').innerHTML = card.querySelector('.ph').innerHTML;
+        $('#m-cat').textContent = p.categoria;
+        $('#m-nombre').textContent = p.nombre;
+        $('#m-desc').textContent = p.descripcion;
+        $('#m-precio').textContent = p.precioTxt;
+        $('#m-anterior').textContent = p.dto > 0 ? p.anteriorTxt : '';
+        const st = $('#m-stock');
+        st.textContent = p.stock === 0 ? 'Agotado' : p.stock === 1 ? 'Queda 1' : `Quedan ${p.stock}`;
+        st.classList.toggle('low', p.stock > 0 && p.stock <= 3);
+        $('#m-sku').textContent = p.sku;
+        const cta = $('#m-cta');
+        cta.hidden = !whatsapp || p.stock === 0;
+        $('#m-how').hidden = !cta.hidden;
+        cta.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero reservar: ${p.nombre} (${p.sku}) - ${p.precioTxt}`)}`;
+        modal.showModal();
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.closest('[data-close]')) modal.close();
+      });
+    </script>
+  </body>
+</html>

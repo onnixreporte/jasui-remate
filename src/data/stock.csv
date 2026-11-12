@@ -1,0 +1,21 @@
+sku,nombre,categoria,descripcion,precio,precio_anterior,stock,foto
+IT1,Adaptador Tipo C a VGA,Tecnología,,72000,,1,productos/it1.jpg
+IT2,Adaptador WiFi,Tecnología,,31500,,2,productos/it2.jpg
+IT3,Disco interno HDD 1TB HGST Travelstar,Tecnología,Modelo 7K1000.,218700,,29,productos/it3.jpg
+IT4,Cocina JAM 4 hornallas,Cocina,,290000,,1,productos/it4.jpg
+IT5,Parlante Tokyo Extreme Party Karaoke 2500,Audio y TV,,550000,,1,productos/it5.png
+IT6,Cocina a gas Tokyo Euro 4H,Cocina,"Frente inox, top control, encendido, luz y parrilla aut.",1278601,,5,productos/it6.jpg
+IT7,Cocina a gas Tokyo New Petit 4H,Cocina,"Mesada inox, horno limpia fácil, con zócalo.",575697,,4,productos/it7.jpg
+IT8,Congelador Tokyo TCON160DF,Refrigeración,"143 net, 2 funciones, tapa ciega, luz LED, interior blanco.",1414761,,2,productos/it8.jpg
+IT9,Congelador Tokyo TCON230DF,Refrigeración,"191 net, tapa ciega + vidrio deslizante.",1654448,,1,productos/it9.jpg
+IT10,Congelador Tokyo TCON350DF,Refrigeración,"290 net, tapa ciega + vidrio deslizante.",2423930,,2,productos/it10.jpg
+IT11,Horno Tokyo Exacto 42L,Cocina,"Con convector, 2 placas eléctricas, 3100 W.",618266,,1,productos/it11.jpg
+IT12,Lavarropas Arno Lavete Eco ML81,Lavado,"10 kg, 400 W.",692558,,1,productos/it12.jpg
+IT13,"Lavarropas automático Tokyo Cecilia Care 6,5 kg",Lavado,900 RPM.,1650582,,3,productos/it13.jpg
+IT14,"Lavarropas automático Tokyo Cecilia Care 8,5 kg",Lavado,1200 RPM.,2077675,,2,productos/it14.jpg
+IT15,Lavarropas Whirlpool WWI10AW,Lavado,"10,1 kg, carga superior, blanco, 850 RPM.",2312337,,3,productos/it15.jpg
+IT16,Lavarropas Whirlpool WWIA12AW,Lavado,"12 kg, carga superior, blanco.",2283703,,5,productos/it16.jpg
+IT17,Sandwichera grill Arno Compact Uno,Cocina,"640 W, 220V/50Hz.",238950,,1,productos/it17.jpg
+IT18,"TV Philips Smart HD 32""",Audio y TV,"HDMI, USB, Netflix.",1040021,,1,productos/it18.jpg
+IT19,"Smart TV Tokyo webOS 43"" FHD",Audio y TV,"Modelo TWS43, Dolby, con Air Mouse.",1497118,,5,productos/it19.jpg
+IT20,"Ventilador de pared Tokyo 18""",Climatización,"Modelo TOP18C, con control, 5 aspas ABS, 3 velocidades, 75 W, 1300 RPM.",269486,,10,productos/it20.jpg
