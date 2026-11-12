@@ -1,4 +1,4 @@
-# Remate interno Jasui
+# Remate interno Yasui
 
 Catálogo estático (Astro). Deploy en Vercel sin configuración.
 
