@@ -148,7 +148,7 @@ const data = JSON.stringify(
           <div class="price"><strong id="m-precio"></strong><s id="m-anterior"></s></div>
           <span class="stock" id="m-stock"></span>
           <p class="sku">Código <span id="m-sku"></span></p>
-          <a class="btn" id="m-cta" target="_blank" rel="noopener" hidden>Lo quiero</a>
+          <a class="btn" id="m-cta" target="_blank" rel="noopener" hidden>Quiero</a>
           <p class="how" id="m-how">{site.comoComprar}</p>
           <ul class="m-pay">
             <li>Transferencia</li>
@@ -214,7 +214,8 @@ const data = JSON.stringify(
         const cta = $('#m-cta');
         cta.hidden = !whatsapp || p.stock === 0;
         $('#m-how').hidden = !cta.hidden;
-        cta.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Hola, quiero reservar: ${p.nombre} (${p.sku}) - ${p.precioTxt}`)}`;
+        const msg = [`Hola, quiero: ${p.nombre} (${p.sku}) - ${p.precioTxt}`, p.descripcion].filter(Boolean).join('\n');
+        cta.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`;
         modal.showModal();
       });
       modal.addEventListener('click', (e) => {
