@@ -1,7 +1,7 @@
 sku,nombre,categoria,descripcion,precio,precio_anterior,stock,foto
 IT1,Adaptador Tipo C a VGA,Tecnología,,72000,,1,productos/it1.jpg
 IT2,Adaptador WiFi,Tecnología,,31500,,2,productos/it2.jpg
-IT3,Disco interno HDD 1TB HGST Travelstar,Tecnología,Modelo 7K1000.,218700,,29,productos/it3.jpg
+IT3,Disco interno HDD 1TB HGST Travelstar,Tecnología,Modelo 7K1000.,218700,,27,productos/it3.jpg
 IT4,Cocina JAM 4 hornallas,Cocina,,290000,,1,productos/it4.jpg
 IT5,Parlante Tokyo Extreme Party Karaoke 2500,Audio y TV,,550000,,1,productos/it5.png
 IT6,Cocina a gas Tokyo Euro 4H,Cocina,"Frente inox, top control, encendido, luz y parrilla aut.",1278601,,5,productos/it6.jpg
