@@ -5,7 +5,7 @@ import { site } from '../config';
 import { getProductos, gs } from '../lib/stock';
 import '../styles/global.css';
 
-const productos = getProductos();
+const productos = await getProductos();
 const categorias = [...new Set(productos.map((p) => p.categoria))];
 const disponibles = productos.filter((p) => p.stock > 0).length;
 const logo = ['logo.svg', 'logo.png', 'logo.webp'].find((f) =>

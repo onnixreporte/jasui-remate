@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import raw from '../data/stock.csv?raw';
+import local from '../data/stock.csv?raw';
+import { site } from '../config';
 
 export interface Producto {
   sku: string;
@@ -40,8 +41,23 @@ function parseCSV(text: string): string[][] {
 // Descarta decimales (1278601.2) y separadores de miles (1.278.601).
 const num = (v = '') => Number(v.trim().replace(/[.,]\d{1,2}$/, '').replace(/[^\d]/g, '')) || 0;
 
-export function getProductos(): Producto[] {
-  const [header, ...rows] = parseCSV(raw);
+// Lee el stock del Google Sheet al compilar. Si falla, usa src/data/stock.csv como respaldo.
+async function cargarCSV(): Promise<string> {
+  if (!site.sheetId) return local;
+  const url = `https://docs.google.com/spreadsheets/d/${site.sheetId}/export?format=csv`;
+  try {
+    const res = await fetch(url, { redirect: 'follow' });
+    const text = await res.text();
+    if (!res.ok || !/^﻿?sku[,;]/i.test(text.trim())) throw new Error(`HTTP ${res.status}, respuesta no es el CSV esperado`);
+    return text;
+  } catch (e) {
+    console.warn(`[stock] No se pudo leer el Google Sheet (${(e as Error).message}). Usando src/data/stock.csv.`);
+    return local;
+  }
+}
+
+export async function getProductos(): Promise<Producto[]> {
+  const [header, ...rows] = parseCSV(await cargarCSV());
   const idx = Object.fromEntries(header.map((h, i) => [h.trim().toLowerCase(), i]));
   const get = (r: string[], k: string) => (r[idx[k]] ?? '').trim();
   return rows.map((r) => {
