@@ -1,7 +1,7 @@
 export const site = {
   marca: 'Yasui',
   titulo: 'Remate interno',
-  h1: '¡QUEMA DE STOCK, todo a costo!',
+  h1: '¡QUEMA DE STOCK, todo al costo!',
   subtitulo: 'Productos Yasui a precios exclusivos para colaboradores. Stock limitado.',
   // ID del Google Sheet con el stock (debe estar compartido como "cualquiera con el enlace puede ver").
   // Vacío = usar src/data/stock.csv.
